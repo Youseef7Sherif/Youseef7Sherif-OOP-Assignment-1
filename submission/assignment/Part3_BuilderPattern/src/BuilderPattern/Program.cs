@@ -1,26 +1,26 @@
 ﻿namespace BuilderPattern;
 
-internal class Program
+public class Program
 {
     static void Main(string[] args)
     {
-        var invoice = new InvoiceBuilder()
-            .SetInvoiceId(Guid.NewGuid())
-            .SetCustomerName("Youssef Mohamed")
-            .SetCustomerEmail("youssef@gmail.com")
-            .SetCustomerPhone("01000000000")
-            .SetBillingAddress(
-                "123 Main Street",
-                "Cairo",
-                "Cairo",
-                "11511",
-                "Egypt")
-            .SetShippingAddress(
-                "456 Second Street",
-                "Giza",
-                "Giza",
-                "12511",
-                "Egypt")
+        var billingAddress = new AddressBuilder()
+            .SetStreet("123 Main Street")
+            .SetCity("Cairo")
+            .SetState("Cairo")
+            .SetZipCode("11511")
+            .SetCountry("Egypt")
+            .Build();
+
+        var shippingAddress = new AddressBuilder()
+            .SetStreet("456 Second Street")
+            .SetCity("Giza")
+            .SetState("Giza")
+            .SetZipCode("12511")
+            .SetCountry("Egypt")
+            .Build();
+
+        var orderInfo = new OrderBuilder()
             .SetOrderDate(DateTime.Today)
             .SetPaymentMethod("Credit Card")
             .SetCurrency("EGP")
@@ -30,15 +30,32 @@ internal class Program
             .SetTotalAmount(4950)
             .Build();
 
+        var invoice = new InvoiceBuilder()
+            .SetInvoiceId(Guid.NewGuid())
+            .SetCustomerName("Youssef Mohamed")
+            .SetCustomerEmail("youssef@gmail.com")
+            .SetCustomerPhone("01000000000")
+            .SetBillingAddress(billingAddress)
+            .SetShippingAddress(shippingAddress)
+            .SetOrderInfo(orderInfo)
+            .Build();
+
         Console.WriteLine($"Customer: {invoice.CustomerName}");
         Console.WriteLine($"Email: {invoice.CustomerEmail}");
-        Console.WriteLine($"Billing City: {invoice.BillingCity}");
-        Console.WriteLine($"Shipping City: {invoice.ShippingCity}");
-        Console.WriteLine($"Payment Method: {invoice.PaymentMethod}");
-        Console.WriteLine($"Currency: {invoice.Currency}");
-        Console.WriteLine($"SubTotal: {invoice.SubTotal}");
-        Console.WriteLine($"Discount: {invoice.DiscountAmount}");
-        Console.WriteLine($"Tax: {invoice.TaxAmount}");
-        Console.WriteLine($"Total: {invoice.TotalAmount}");
+
+        Console.WriteLine(
+            $"Billing Address: {invoice.BillingAddress.City}, " +
+            $"{invoice.BillingAddress.Country}");
+
+        Console.WriteLine(
+            $"Shipping Address: {invoice.ShippingAddress.City}, " +
+            $"{invoice.ShippingAddress.Country}");
+
+        Console.WriteLine($"Payment Method: {invoice.OrderInfo.PaymentMethod}");
+        Console.WriteLine($"Currency: {invoice.OrderInfo.Currency}");
+        Console.WriteLine($"SubTotal: {invoice.OrderInfo.SubTotal}");
+        Console.WriteLine($"Discount: {invoice.OrderInfo.DiscountAmount}");
+        Console.WriteLine($"Tax: {invoice.OrderInfo.TaxAmount}");
+        Console.WriteLine($"Total: {invoice.OrderInfo.TotalAmount}");
     }
 }
