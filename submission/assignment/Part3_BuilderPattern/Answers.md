@@ -15,3 +15,33 @@ No. The deeper problem is that the class contains several conceptually different
 For example, billing and shipping addresses represent address information, while order date, payment method, currency, and financial amounts represent order and payment information.
 
 Putting all of these concerns into one large class makes the class harder to understand, validate, maintain, and reuse. Grouping related data into smaller components provides better separation of responsibilities.
+
+## Task 3.3 — Why Is the Composed Version Better?
+
+The composed version is better than a single large builder because each builder has a clear and focused responsibility.
+
+### 1. Single Responsibility
+
+`AddressBuilder` is responsible only for building and validating addresses, while `OrderBuilder` is responsible for order and payment information. `InvoiceBuilder` only composes these parts into the final invoice.
+
+This makes each builder easier to understand and maintain.
+
+### 2. Independent Validation
+
+Each builder can validate its own data independently.
+
+For example, `AddressBuilder` validates that all address fields are provided, while `OrderBuilder` validates the required order and payment information.
+
+This keeps validation rules close to the data they belong to.
+
+### 3. Reuse
+
+`AddressBuilder` can be reused for both the billing address and the shipping address without duplicating the address-building logic.
+
+The same builder can also be reused in other parts of the application that need to create an `Address`.
+
+### 4. Readability
+
+The composed approach makes the construction process easier to read because related properties are grouped together.
+
+Instead of one large builder containing many unrelated methods, the code clearly separates address information from order and payment information and then combines them through `InvoiceBuilder`.
